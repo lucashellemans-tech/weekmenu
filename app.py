@@ -15,7 +15,7 @@ import json
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="Weekmenu",
-    page_icon="??",
+    page_icon="icon.png",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
