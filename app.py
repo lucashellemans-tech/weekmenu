@@ -223,14 +223,20 @@ st.markdown("""
 # NEW UPDATED CODE:
 if not firebase_admin._apps:
     if "gcp_service_account" in st.secrets:
-        # Converts the secrets dictionary from Streamlit Cloud into a valid credential dict
+        # Convert Streamlit Secrets dict to standard Python dictionary
         key_dict = dict(st.secrets["gcp_service_account"])
+        
+        # Fix line breaks in private_key if needed
+        if "private_key" in key_dict:
+            key_dict["private_key"] = key_dict["private_key"].replace("\\n", "\n")
+            
         cred = credentials.Certificate(key_dict)
     else:
-        # Fallback for local testing on your computer
+        # Fallback for local execution
         cred = credentials.Certificate('serviceAccountKey.json')
         
     firebase_admin.initialize_app(cred)
+
 
 db = firestore.client()
 
