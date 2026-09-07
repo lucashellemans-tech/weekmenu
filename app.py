@@ -221,18 +221,21 @@ st.markdown("""
 # FIREBASE & INITIALIZATION
 # ---------------------------------------------------------
 # NEW UPDATED CODE:
+
+
+# Initialize Firebase securely using Streamlit Secrets with local fallback
 if not firebase_admin._apps:
     if "gcp_service_account" in st.secrets:
-        # Convert Streamlit Secrets dict to standard Python dictionary
+        # Convert Streamlit's internal AttrDict to a standard Python dictionary
         key_dict = dict(st.secrets["gcp_service_account"])
         
-        # Fix line breaks in private_key if needed
+        # Clean up private key line breaks (Fixes "Unable to load PEM file" / Invalid symbol 46)
         if "private_key" in key_dict:
             key_dict["private_key"] = key_dict["private_key"].replace("\\n", "\n")
             
         cred = credentials.Certificate(key_dict)
     else:
-        # Fallback for local execution
+        # Fallback for local development
         cred = credentials.Certificate('serviceAccountKey.json')
         
     firebase_admin.initialize_app(cred)
