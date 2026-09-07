@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 import base64
 import os
+import json  # <-- ADD THIS IMPORT
 
 # Page Configuration for modern mobile view
 st.set_page_config(page_title="Weekmenu", layout="centered", initial_sidebar_state="collapsed")
@@ -219,8 +220,16 @@ st.markdown("""
 # ---------------------------------------------------------
 # FIREBASE & INITIALIZATION
 # ---------------------------------------------------------
+# NEW UPDATED CODE:
 if not firebase_admin._apps:
-    cred = credentials.Certificate('serviceAccountKey.json')
+    if "gcp_service_account" in st.secrets:
+        # Converts the secrets dictionary from Streamlit Cloud into a valid credential dict
+        key_dict = dict(st.secrets["gcp_service_account"])
+        cred = credentials.Certificate(key_dict)
+    else:
+        # Fallback for local testing on your computer
+        cred = credentials.Certificate('serviceAccountKey.json')
+        
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
